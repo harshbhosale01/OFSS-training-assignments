@@ -8,26 +8,32 @@ public class AssociationTest{
         int locB=3;
         int result_loc=4;
         int result;
-        result=CPU.cpu_operation(locA, locB, result_loc);
+        char operation='+';
+        result=CPU.cpu_operation(locA, locB, result_loc, operation);
     }
 }
 class processors{
 }
 class CPU extends processors{ //is A
-    static DataBus dbus = new DataBus();
+    static DataBus dbus = new DataBus(); //has A
 
-    static int cpu_operation(int locA, int locB, int result_loc)
+    static int cpu_operation(int locA, int locB, int result_loc, char operation)
     {
         System.out.println("Computer starting...");
         int op1 = dbus.memory_fetch(locA);
         int op2 = dbus.memory_fetch(locB);
         System.out.println(STR."Memory location \{locA} and\{locB} are fetched.");
-        ALU alu = new ALU(op1, op2);
-        char temp = '+';
-        int result = alu.computation(temp);
-        System.out.println(STR."The result of the \{temp} arithmetic operation is: \{result}");
-        dbus.memory_save(result, result_loc);
-        return result;
+        ALU alu = new ALU(op1, op2); //has A
+        if(operation=='+' || operation=='-' || operation=='*' || operation=='/') {
+            int result = alu.computation(operation);
+            System.out.println(STR."The result of the \{operation} arithmetic operation is: \{result}");
+            dbus.memory_save(result, result_loc);
+            return result;
+        }
+        else {
+            System.out.println(STR."\{+operation} is not a valid operation");
+            return -1;
+        }
     }
 }
 class DataBus{
@@ -80,7 +86,7 @@ class ALU{
             return operandA/operandB;
         }
         else{
-            return 0;
+            return -1;
         }
     }
 
